@@ -1,0 +1,31 @@
+<!--
+<gov-tabs color="primary" type="text" orientation="horizontal">
+    <gov-tabs-item label="Home"></gov-tabs-item>
+    <gov-tabs-item label="Button control"></gov-tabs-item>
+    <gov-tabs-item label="Dialog control"></gov-tabs-item>
+    <gov-tabs-item label="Formular control"></gov-tabs-item>
+    <gov-tabs-item label="Menu control"></gov-tabs-item>
+</gov-tabs>
+-->
+
+<div class="gov-tabs hydrated" color="primary" type="text" size="m" orientation="horizontal">
+    <div class="gov-tabs__tabs" role="tablist">
+        <ul class="gov-tabs__list">
+            <li class="gov-tabs__item">
+                <a routerLink="/" routerLinkActive [routerLinkActiveOptions]="{exact: true}" #homeLink="routerLinkActive" [attr.aria-selected]="homeLink.isActive" class="gov-tabs__btn">Home</a>
+            </li>
+            <li class="gov-tabs__item">
+                <a routerLink="/button" routerLinkActive #buttonLink="routerLinkActive" [attr.aria-selected]="buttonLink.isActive" class="gov-tabs__btn">Button control</a>
+            </li>
+            <li class="gov-tabs__item">
+                <a routerLink="/dialog" routerLinkActive #dialogLink="routerLinkActive" [attr.aria-selected]="dialogLink.isActive" class="gov-tabs__btn">Dialog control</a>
+            </li>
+            <li class="gov-tabs__item">
+                <a routerLink="/formular" routerLinkActive #formularLink="routerLinkActive" [attr.aria-selected]="formularLink.isActive" class="gov-tabs__btn">Formular control</a>
+            </li>
+            <li class="gov-tabs__item">
+                <a routerLink="/menu" routerLinkActive #menuLink="routerLinkActive" [attr.aria-selected]="menuLink.isActive" class="gov-tabs__btn">Menu control</a>
+            </li>
+        </ul>
+    </div>
+</div>

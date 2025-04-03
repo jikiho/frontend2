@@ -1,0 +1,5 @@
+<aside>
+    @for (item of toasts.items(); track item.index) {
+        <gov-toast [class.hidden]="item.hidden()" [color]="item.color" [type]="item.type" [gravity]="item.gravity" [position]="item.position" [time]="item.time">{{ item.message }}</gov-toast>
+    }
+</aside>

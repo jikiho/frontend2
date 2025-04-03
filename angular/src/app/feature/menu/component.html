@@ -1,0 +1,19 @@
+<gov-flex direction="column" gap="m" wrap="wrap">
+    <gov-flex direction="row" gap="m" align-items="center">
+        <gov-button color="primary" type="solid" (gov-click)="menu.add()" [disabled]="!menu.more()">Add item</gov-button>
+
+        <gov-button color="primary" type="solid" (gov-click)="menu.remove()" [disabled]="!menu.less()">Remove item</gov-button>
+
+        <gov-tooltip position="top" message="Number of additional menu items">
+            <gov-tag color="primary" type="subtle" size="m">{{ menu.count() }}</gov-tag>
+        </gov-tooltip>
+
+        <gov-button color="neutral" type="base" (gov-click)="menu.clear()" [disabled]="!menu.count()">Clear menu</gov-button>
+    </gov-flex>
+
+    <gov-flex direction="row" gap="m" wrap="wrap" align-items="center">
+        @for (item of menu.items(); track $index) {
+            <gov-chip color="primary" type="outlined">{{ item }}</gov-chip>
+        }
+    </gov-flex>
+</gov-flex>

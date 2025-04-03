@@ -1,0 +1,23 @@
+<gov-flex direction="column" gap="m" wrap="wrap">
+    <gov-flex direction="row" gap="m" align-items="center">
+        @if (!noGovButton) {
+            <gov-button [color]="govButtonColor" type="solid" (auxclick)="click($event)" (contextmenu)="click($event)" (dblclick)="click($event)" (gov-click)="click($event)">Click gov-button</gov-button>
+        }
+
+        @if (!noHtmlButton) {
+            <button [attr.color]="htmlButtonColor" type="solid" class="gov-button" (auxclick)="click($event)" (contextmenu)="click($event)" (dblclick)="click($event)" (click)="click($event)">Click button</button>
+        }
+
+        <gov-tooltip position="top" message="Number of button events">
+            <gov-tag color="primary" type="subtle" size="m">{{ events.count() }}</gov-tag>
+        </gov-tooltip>
+
+        <gov-button color="neutral" type="base" (gov-click)="clear()" [disabled]="!events.count()">Clear events</gov-button>
+    </gov-flex>
+
+    <gov-flex direction="row" gap="m" wrap="wrap" align-items="center">
+        @for (item of events.items(); track $index) {
+            <gov-chip [color]="item.color" type="outlined">{{ item.type }}</gov-chip>
+        }
+    </gov-flex>
+</gov-flex>

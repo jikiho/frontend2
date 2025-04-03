@@ -1,0 +1,33 @@
+<form [formGroup]="formular">
+    <gov-flex direction="column" gap="m">
+        <gov-form-control class="fix">
+            <gov-form-label>Full name</gov-form-label>
+
+            <gov-form-input type="text" formControlName="name" [invalid]="(formular.controls.name.dirty || formular.controls.name.touched) && formular.controls.name.invalid"></gov-form-input>
+            <gov-form-message>{{ { dirty: formular.controls.name.dirty, touched: formular.controls.name.touched, invalid: formular.controls.name.invalid, value: formular.controls.name.value }| jsoner }}</gov-form-message>
+        </gov-form-control>
+
+        <gov-form-control class="fix">
+            <gov-form-label>State selection (optional entry)</gov-form-label>
+
+            <gov-form-autocomplete #autocomplete formControlName="state" [invalid]="(formular.controls.state.dirty || formular.controls.state.touched) && formular.controls.state.invalid" (gov-focus)="filter(autocomplete, $event)" (gov-input)="filter(autocomplete, $event)" (gov-select)="select($event)" throttletime="200" minLength="0"></gov-form-autocomplete>
+            <gov-form-message>{{ { dirty: formular.controls.state.dirty, touched: formular.controls.state.touched, invalid: formular.controls.state.invalid, value: formular.controls.state.value }| jsoner }}</gov-form-message>
+        </gov-form-control>
+
+        <!--
+        <gov-flex direction="row" gap="m" wrap="wrap">
+            @for (item of items; track $index) {
+                <gov-chip color="primary" type="outlined">{{ item }}</gov-chip>
+            }
+        </gov-flex>
+        -->
+
+        <gov-flex direction="row" gap="m">
+            <gov-button color="primary" type="solid" disabled>Submit formular</gov-button>
+
+            <gov-button color="neutral" type="base" (gov-click)="formular.reset(defaults)" [disabled]="!formular.dirty && !formular.touched">Reset formular</gov-button>
+        </gov-flex>
+
+        <gov-form-message [color]="formular.invalid ? 'error' : 'neutral'">{{ { dirty: formular.dirty, touched: formular.touched, invalid: formular.invalid, value: formular.value }| jsoner }}</gov-form-message>
+    </gov-flex>
+</form>

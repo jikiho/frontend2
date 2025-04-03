@@ -1,0 +1,29 @@
+<div class="gov-header__navigation js-gov-header__navigation">
+    <nav #menu_element class="gov-navigation" aria-label="Hlavní navigace">
+        <ul style="justify-content: start;">
+            <li>
+                <a href="#">Portálová služba</a>
+            </li>
+            <li>
+                <a href="#">Položka nabídky</a>
+            </li>
+            <li>
+                <a href="#">Jiná položka</a>
+            </li>
+            @for (item of menu.items(); track $index) {
+                <li>
+                    <a href="#">{{ item }}</a>
+                </li>
+            }
+            <li>
+                <a href="#">O službě</a>
+            </li>
+            <li class="gov-mobile-only">
+                <gov-button type="base" color="primary" size="l">English</gov-button>
+            </li>
+            <li class="gov-navigation__item gov-mobile-only">
+                <gov-theme-switch size="m" display-label="true"></gov-theme-switch>
+            </li>
+        </ul>
+    </nav>
+</div>

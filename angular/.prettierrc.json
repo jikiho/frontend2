@@ -1,0 +1,16 @@
+{
+    "printWidth": 120,
+    "tabWidth": 4,
+    "semi": true,
+    "trailingComma": "none",
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "singleQuote": true
+        },
+        {
+            "files": ["*.html"],
+            "parser": "angular"
+        }
+    ]
+}

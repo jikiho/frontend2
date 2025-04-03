@@ -1,0 +1,45 @@
+<gov-flex direction="column" gap="m" wrap="wrap">
+    <gov-flex direction="row" gap="m">
+        <gov-button color="primary" type="solid" (gov-click)="dialog.open = true" [disabled]="dialog.open || false">
+            <!--
+            <gov-icon type="complex" name="chat"></gov-icon>
+            -->
+            Open dialog
+        </gov-button>
+        <gov-button color="neutral" type="base" (gov-click)="dialog.open = false" [disabled]="!dialog.open || false">
+            Close dialog
+        </gov-button>
+    </gov-flex>
+
+    @if (app.subtitle) {
+        <h4>{{ app.subtitle }}</h4>
+    }
+
+    @for (text of texts; track $index) {
+        <p>{{ text }}</p>
+    }
+</gov-flex>
+
+<gov-dialog class="fix" #dialog (gov-close)="handleClose(dialog, $event)">
+    @if (app.title) {
+        <gov-dialog-title [label]="app.title"></gov-dialog-title>
+    }
+
+    @if (app.subtitle || texts.length) {
+        <gov-flex direction="column" gap="m" wrap="wrap">
+            @if (app.subtitle) {
+                <h4>{{ app.subtitle }}</h4>
+            }
+
+            @for (text of texts; track $index) {
+                <p>{{ text }}</p>
+            }
+        </gov-flex>
+    }
+
+    <gov-dialog-footer>
+        <gov-button color="neutral" type="base" (gov-click)="dialog.open = false">
+            Close dialog
+        </gov-button>
+    </gov-dialog-footer>
+</gov-dialog>

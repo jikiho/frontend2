@@ -1,0 +1,14 @@
+<gov-flex direction="column" gap="m" align-items="flex-start">
+    <gov-flex direction="row" gap="l" align-items="center">
+        <gov-tooltip position="top" [message]="`Clock shown currently ${seconds() ? 'with' : 'without'} seconds`">
+            <gov-tag [color]="update() ? 'primary' : 'neutral'" type="subtle" size="m">
+                <gov-icon type="templates" [name]="update() ? 'clock' : 'clock-history'" slot="icon-start"></gov-icon>
+                {{ timestamp() | date:format }}
+            </gov-tag>
+        </gov-tooltip>
+
+        <gov-form-switch size="m" [checked]="update()" (gov-change)="update.set($event.target.checked)"><gov-form-label size="m" slot="label">Update clock</gov-form-label></gov-form-switch>
+
+        <gov-form-switch size="m" [checked]="seconds()" (gov-change)="seconds.set($event.target.checked)"><gov-form-label size="m" slot="label">Show clock with seconds</gov-form-label></gov-form-switch>
+    </gov-flex>
+</gov-flex>

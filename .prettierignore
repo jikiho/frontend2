@@ -1,0 +1,6 @@
+.angular
+.git
+.gitignore 
+.vscode
+node_modules
+yarn.lock

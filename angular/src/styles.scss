@@ -1,0 +1,29 @@
+gov-dialog.fix {
+    .gov-dialog__dialog {
+        outline: none;
+    }
+
+    .gov-dialog__content:focus {
+        //outline: var(--outline-width, 0.125rem) solid var(--status-focus);
+    }
+}
+
+.hidden, [hidden=""], [hidden="true"], [hidden="1"] {
+    display: none;
+}
+
+gov-form-control.fix:has([invalid]) {
+    gov-form-label > label {
+        color: var(--form-state-label-error, var(--text-status-error));
+    }
+
+    gov-form-message {
+        &:not([color]), &[color=neutral] {
+            color: var(--color, var(--text-status-error));
+        }
+    }
+}
+
+.gov-tooltip {
+    border-bottom: none;
+}

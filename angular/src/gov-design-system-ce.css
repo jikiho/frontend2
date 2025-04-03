@@ -1,0 +1,12 @@
+/* Gov Design System CE fonts */
+@import "@gov-design-system-ce/fonts/lib/roboto.css";
+
+/* Gov Design System CE styles */
+@import "@gov-design-system-ce/styles/lib/tokens.css";
+@import "@gov-design-system-ce/styles/lib/styles.css";
+@import "@gov-design-system-ce/styles/lib/layout.css";
+@import "@gov-design-system-ce/styles/lib/components.css";
+
+/* Gov Design System CE templates styles */
+@import "@gov-design-system-ce/templates/lib/styles/tokens.css";
+@import "@gov-design-system-ce/templates/lib/styles/styles.css";

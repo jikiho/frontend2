@@ -1,0 +1,47 @@
+<header class="gov-header">
+    <div class="gov-header__divider">
+        <div class="gov-header__content">
+            <gov-flex justify-content="space-between" align-items="center" responsive="false">
+                <a routerLink="/" class="gov-header__logo">
+                    <gov-flex align-items="center" gap="s" responsive="false">
+                        <gov-icon type="templates" name="gov-cz"></gov-icon>
+                        Portál živnostenského podnikání
+                    </gov-flex>
+                </a>
+                <gov-flex class="gov-header__mobile" align-items="center" gap="s" responsive="false">
+                    <gov-button color="primary" type="base" size="m" aria-label="Přihlásit se">
+                        <gov-icon slot="icon-start" type="templates" name="person-fill" color="primary" size="m"></gov-icon>
+                    </gov-button>
+                    <gov-button color="primary" type="base" size="m" class="js-gov-header__navigation-trigger">
+                        <gov-icon slot="icon-start" type="components" name="list" color="primary" size="m"></gov-icon>
+                    </gov-button>
+                </gov-flex>
+            </gov-flex>
+            <div class="gov-header__search">
+                <gov-form-search size="m" color="neutral">
+                    <gov-form-input slot="input" size="m" placeholder="Hledat..." aria-label="Search portal content">
+                        <gov-icon slot="icon-start" name="search"></gov-icon>
+                    </gov-form-input>
+                    <gov-button slot="button-erase" size="s" color="neutral" type="base" aria-label="Odstranit zadaný výraz">
+                        <gov-icon slot="icon-start" name="x"></gov-icon>
+                    </gov-button>
+                    <gov-button slot="button" size="s" color="primary" type="solid" aria-label="Vyhledat zadaný výraz">
+                        <gov-icon slot="icon-start" name="search"></gov-icon>
+                    </gov-button>
+                </gov-form-search>
+            </div>
+            <gov-flex class="gov-header__action" justify-content="space-between" align-items="center" gap="m">
+                <gov-button color="primary" type="solid" size="m">Přihlásit se</gov-button>
+
+                <gov-button color="primary" type="base" size="m">
+                    <gov-icon slot="icon-start" type="templates" name="flag"></gov-icon>
+                    English
+                </gov-button>
+
+                <gov-theme-switch size="m"></gov-theme-switch>
+            </gov-flex>
+        </div>
+    </div>
+
+    <core-menu></core-menu>
+</header>
