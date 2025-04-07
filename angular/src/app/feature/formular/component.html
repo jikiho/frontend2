@@ -8,6 +8,37 @@
         </gov-form-control>
 
         <gov-form-control class="fix">
+            <gov-form-label>State gov-select</gov-form-label>
+
+            <gov-form-select formControlName="govSelect" [class.invalid]="(formular.controls.govSelect.dirty || formular.controls.govSelect.touched) && formular.controls.govSelect.invalid">
+                <option [ngValue]="null"></option>
+
+                @for (item of selectItems; track $index) {
+                    <option [ngValue]="item">{{ item.label }}</option>
+                }
+            </gov-form-select>
+            <gov-form-message>{{ { dirty: formular.controls.govSelect.dirty, touched: formular.controls.govSelect.touched, invalid: formular.controls.govSelect.invalid, value: formular.controls.govSelect.value }| jsoner }}</gov-form-message>
+        </gov-form-control>
+
+        <gov-form-control class="fix">
+            <gov-form-label>State select</gov-form-label>
+
+            <div class="gov-form-select" size="m">
+                <span class="element">
+                    <select formControlName="select" [class.invalid]="(formular.controls.select.dirty || formular.controls.select.touched) && formular.controls.select.invalid">
+                        <option [ngValue]="null"></option>
+
+                        @for (item of selectItems; track $index) {
+                            <option [ngValue]="item">{{ item.label }}</option>
+                        }
+                    </select>
+                    <gov-icon class="arrow-icon" type="components" name="chevron-down"></gov-icon>
+                </span>
+            </div>
+            <gov-form-message>{{ { dirty: formular.controls.select.dirty, touched: formular.controls.select.touched, invalid: formular.controls.select.invalid, value: formular.controls.select.value }| jsoner }}</gov-form-message>
+        </gov-form-control>
+
+        <gov-form-control class="fix">
             <gov-form-label>State selection (optional entry)</gov-form-label>
 
             <gov-form-autocomplete #autocomplete formControlName="state" [invalid]="(formular.controls.state.dirty || formular.controls.state.touched) && formular.controls.state.invalid" (gov-focus)="filter(autocomplete, $event)" (gov-input)="filter(autocomplete, $event)" (gov-select)="select($event)" throttletime="200" minLength="0"></gov-form-autocomplete>

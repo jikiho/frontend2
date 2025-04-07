@@ -22,9 +22,13 @@ export class FormularComponent {
         'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
     ];
 
+    selectItems: any[] = this.states.map((label) => ({label}));
+
     formular = new FormGroup({
         name: new FormControl('Johan Jouda', Validators.required),
-        state: new FormControl()
+        state: new FormControl(),
+        govSelect: new FormControl(),
+        select: new FormControl()
     });
 
     defaults = this.formular.value;
