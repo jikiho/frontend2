@@ -2,14 +2,14 @@ import { Component, ChangeDetectionStrategy, CUSTOM_ELEMENTS_SCHEMA } from '@ang
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GovDesignSystemModule, GovFormAutocomplete } from "@gov-design-system-ce/angular";
 
-import { JsonerPipe } from '@shared/pipes/jsoner.pipe';
+import { FormControlStatusComponent, FormControlStatusDirective } from './form-control/status';
 
 @Component({
     //selector: 'app-formular',
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    imports: [GovDesignSystemModule, JsonerPipe, ReactiveFormsModule]
+    imports: [FormControlStatusComponent, FormControlStatusDirective, GovDesignSystemModule, ReactiveFormsModule]
 })
 export class FormularComponent {
     states: string[] = [
@@ -22,36 +22,37 @@ export class FormularComponent {
         'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
     ];
 
-    selectItems: any[] = this.states.map((label) => ({label}));
+    items: any[] = this.states.map((name) => ({
+        name,
+        value: name.toLowerCase()
+    }));
 
     formular = new FormGroup({
-        name: new FormControl('Johan Jouda', Validators.required),
-        state: new FormControl(),
-        govSelect: new FormControl(),
-        select: new FormControl()
+        stateGovInput: new FormControl<string | null>(null, Validators.required),
+        stateGovAutocomplete: new FormControl<string | null>(null, Validators.required),
+        stateGovSelect: new FormControl(),
+        stateSelect: new FormControl()
     });
 
     defaults = this.formular.value;
 
-    status = ['dirty', 'valid', 'value'];
-
     filter(autocomplete: GovFormAutocomplete, event: Event,
-            target: any = event.target, value: string | null = target.value) {
-console.log(event.type, autocomplete, event);
+            target: any = event.target, name: string | null = target.value) {
         autocomplete.setProcessing(true);
 
-        const expr = value && new RegExp(value, 'i'),
-            options = expr ? this.states.filter((option) => expr.test(option)) : this.states;
+        const value = name?.toLowerCase(),
+            options = value ? this.items.filter((option) => option.value.includes(value)) : this.items;
 
-        autocomplete.setOptions(options.map((name) => ({name})));
+        autocomplete.setOptions(options);
 
         autocomplete.setProcessing(false);
+console.log(event.type, options.length, name);
     }
 
     select(event: CustomEvent,
-            detail: any = event.detail, value: string | null = detail.selected) {
+            detail: any = event.detail, value: any | null = detail.selected) {
 console.log(event.type, value);
-        const control = this.formular.controls.state;
+        const control = this.formular.controls.stateGovAutocomplete;
 
         control.setValue(value);
 

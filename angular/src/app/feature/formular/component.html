@@ -1,48 +1,26 @@
 <form [formGroup]="formular">
     <gov-flex direction="column" gap="m">
-        <gov-form-control class="fix">
-            <gov-form-label>Full name</gov-form-label>
+        <gov-infobar [color]="formular.invalid ? 'error' : 'primary'" type="subtle">
+            <gov-icon slot="icon" type="components" name="exclamation-triangle-fill"></gov-icon>
 
-            <gov-form-input type="text" formControlName="name" [invalid]="(formular.controls.name.dirty || formular.controls.name.touched) && formular.controls.name.invalid"></gov-form-input>
-            <gov-form-message>{{ { dirty: formular.controls.name.dirty, touched: formular.controls.name.touched, invalid: formular.controls.name.invalid, value: formular.controls.name.value }| jsoner }}</gov-form-message>
+            <p>Invalidní položky formuláře jsou zvýrazněny pouze ve stavu "dirty" nebo "touched".</p>
+        </gov-infobar>
+
+
+        <gov-form-control class="fix">
+            <gov-form-label>State gov-input</gov-form-label>
+
+            <gov-form-input type="text" formControlName="stateGovInput" formControlStatus></gov-form-input>
+
+            <form-control-status [control]="formular.controls.stateGovInput"></form-control-status>
         </gov-form-control>
 
         <gov-form-control class="fix">
-            <gov-form-label>State gov-select</gov-form-label>
+            <gov-form-label>State gov-autocomplete</gov-form-label>
 
-            <gov-form-select formControlName="govSelect" [class.invalid]="(formular.controls.govSelect.dirty || formular.controls.govSelect.touched) && formular.controls.govSelect.invalid">
-                <option [ngValue]="null"></option>
+            <gov-form-autocomplete #autocomplete formControlName="stateGovAutocomplete" formControlStatus (gov-focus)="filter(autocomplete, $event)" (gov-input)="filter(autocomplete, $event)" (gov-select)="select($event)" minLength="0"></gov-form-autocomplete>
 
-                @for (item of selectItems; track $index) {
-                    <option [ngValue]="item">{{ item.label }}</option>
-                }
-            </gov-form-select>
-            <gov-form-message>{{ { dirty: formular.controls.govSelect.dirty, touched: formular.controls.govSelect.touched, invalid: formular.controls.govSelect.invalid, value: formular.controls.govSelect.value }| jsoner }}</gov-form-message>
-        </gov-form-control>
-
-        <gov-form-control class="fix">
-            <gov-form-label>State select</gov-form-label>
-
-            <div class="gov-form-select" size="m">
-                <span class="element">
-                    <select formControlName="select" [class.invalid]="(formular.controls.select.dirty || formular.controls.select.touched) && formular.controls.select.invalid">
-                        <option [ngValue]="null"></option>
-
-                        @for (item of selectItems; track $index) {
-                            <option [ngValue]="item">{{ item.label }}</option>
-                        }
-                    </select>
-                    <gov-icon class="arrow-icon" type="components" name="chevron-down"></gov-icon>
-                </span>
-            </div>
-            <gov-form-message>{{ { dirty: formular.controls.select.dirty, touched: formular.controls.select.touched, invalid: formular.controls.select.invalid, value: formular.controls.select.value }| jsoner }}</gov-form-message>
-        </gov-form-control>
-
-        <gov-form-control class="fix">
-            <gov-form-label>State selection (optional entry)</gov-form-label>
-
-            <gov-form-autocomplete #autocomplete formControlName="state" [invalid]="(formular.controls.state.dirty || formular.controls.state.touched) && formular.controls.state.invalid" (gov-focus)="filter(autocomplete, $event)" (gov-input)="filter(autocomplete, $event)" (gov-select)="select($event)" throttletime="200" minLength="0"></gov-form-autocomplete>
-            <gov-form-message>{{ { dirty: formular.controls.state.dirty, touched: formular.controls.state.touched, invalid: formular.controls.state.invalid, value: formular.controls.state.value }| jsoner }}</gov-form-message>
+            <form-control-status [control]="formular.controls.stateGovAutocomplete"></form-control-status>
         </gov-form-control>
 
         <!--
@@ -53,12 +31,49 @@
         </gov-flex>
         -->
 
-        <gov-flex direction="row" gap="m">
-            <gov-button color="primary" type="solid" disabled>Submit formular</gov-button>
+        <gov-form-control class="fix">
+            <gov-form-label>State gov-select (optional)</gov-form-label>
 
-            <gov-button color="neutral" type="base" (gov-click)="formular.reset(defaults)" [disabled]="!formular.dirty && !formular.touched">Reset formular</gov-button>
+            <gov-form-select formControlName="stateGovSelect" formControlStatus>
+                <option [ngValue]="null"></option>
+
+                @for (item of items; track $index) {
+                    <option [ngValue]="item">{{ item.name }}</option>
+                }
+            </gov-form-select>
+
+            <form-control-status [control]="formular.controls.stateGovSelect"></form-control-status>
+        </gov-form-control>
+
+        <gov-form-control class="fix">
+            <gov-form-label>State select (optional)</gov-form-label>
+
+            <div class="gov-form-select fix" size="m"
+                    [formControlStatus]="formular.controls.stateSelect"><!-- border -->
+                <span class="element">
+                    <select class="fix" formControlName="stateSelect" formControlStatus>
+                        <option [ngValue]="null"></option>
+
+                        @for (item of items; track $index) {
+                            <option [ngValue]="item">{{ item.name }}</option>
+                        }
+                    </select>
+
+                    <gov-icon class="arrow-icon" type="components" name="chevron-down"></gov-icon>
+
+                    <gov-icon class="validation-icon fix" [name]="formular.controls.stateSelect.invalid ? 'exclamation-lg' : 'check-lg'" type="components"></gov-icon>
+                </span>
+            </div>
+
+            <form-control-status [control]="formular.controls.stateSelect"></form-control-status>
+        </gov-form-control>
+
+        <gov-flex direction="row" gap="m">
+            <gov-button color="primary" type="solid" disabled>Odeslat</gov-button>
+
+            <gov-button color="neutral" type="base" (gov-click)="formular.reset(defaults)" [disabled]="!formular.dirty && !formular.touched">Obnovit formulář</gov-button>
         </gov-flex>
 
-        <gov-form-message [color]="formular.invalid ? 'error' : 'neutral'">{{ { dirty: formular.dirty, touched: formular.touched, invalid: formular.invalid, value: formular.value }| jsoner }}</gov-form-message>
+        <form-control-status [control]="formular"></form-control-status>
     </gov-flex>
 </form>

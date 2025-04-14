@@ -24,6 +24,10 @@ gov-form-control.fix:has([invalid]) {
     }
 }
 
+select.fix:not([invalid]):not([success]) ~ gov-icon.validation-icon {
+    display: none;
+}
+
 .gov-tooltip {
     border-bottom: none;
 }
