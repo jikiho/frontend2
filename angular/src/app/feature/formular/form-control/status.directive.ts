@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Directive, HostBinding, Input, OnDestroy, AfterViewInit, Optional } from '@angular/core';
-import { AbstractControl, FormControl, NgControl, PristineChangeEvent, StatusChangeEvent, TouchedChangeEvent } from '@angular/forms';
+import { FormControl, NgControl } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { distinctUntilChanged as rxDistinctUntilChanged, map as rxMap } from 'rxjs';
+import { debounceTime as rxDebounceTime, distinctUntilChanged as rxDistinctUntilChanged, map as rxMap } from 'rxjs';
 
 type ControlType = FormControl | NgControl;
 
@@ -33,7 +33,7 @@ export class FormControlStatusDirective implements AfterViewInit, OnDestroy {
 
     private control = new BehaviorSubject<ControlType | null>(null);
 
-    private initialized!: Subscription;
+    private inits?: Subscription;
 
     private changes?: Subscription;
 
@@ -44,7 +44,7 @@ export class FormControlStatusDirective implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        this.initialized = this.control.subscribe((control) => {
+        this.inits = this.control.subscribe((control) => {
             if (control instanceof NgControl) {
                 this.initStatus(control.control as FormControl);
             }
@@ -55,7 +55,7 @@ export class FormControlStatusDirective implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.initialized.unsubscribe();
+        this.inits?.unsubscribe();
 
         this.changes?.unsubscribe();
     }
@@ -77,12 +77,10 @@ export class FormControlStatusDirective implements AfterViewInit, OnDestroy {
 
         this.updateStatus(control);
 
-        //TODO? první nastavení invalid se jinak neprojeví
-        this.cdr.markForCheck();
-
         if (control instanceof FormControl) {
             this.changes = control.events.pipe(
-                rxMap(() => (control.dirty ? 1 : 0) + (control.touched ? 2 : 0) + (control.invalid ? 4 : 0)),
+                rxDebounceTime(25),
+                rxMap(() => this.getStatus(control)),
                 rxDistinctUntilChanged()
             )
             .subscribe(() => {
@@ -97,35 +95,32 @@ console.warn("Detect only status changes", control);
         }
     }
 
-    private updateStatus(control: ControlType | null) {
-        if (!control) {
-            this.invalid = this.success = null;
-        }
-        else {
-            const markable = this.isMarkable(control);
+    private hasValue(control: ControlType): boolean {
+        return !!control.value;
+    }
 
-            this.invalid = markable && control?.invalid || null;
+    private getStatus(control: ControlType): number {
+        return (control.dirty ? 1 : 0) + (control.touched ? 2 : 0) + (control.invalid ? 4 : 0) +
+                (this.hasValue(control) ? 8 : 0);
+    }
+
+    private updateStatus(control: ControlType | null) {
+        if (control) {
+            const markable = control.dirty || control.touched;
+
+            this.invalid = markable && control.invalid || null;
 
             if (this.controlSuccess) {
-                this.success = markable && control?.valid || null;
+                this.success = markable && control.valid && this.hasValue(control) || null;
             }
             else if (this.success) {
                 this.success = null;
             }
         }
-    }
-
-    private isMarkable(control: ControlType): boolean {
-        if (control.dirty || control.touched) {
-            return true;
+        else {
+            this.invalid = this.success = null;
         }
-        //else if (this.options.markNotNull && control.value !== null) {
-        //    return true;
-        //}
-        //else if (this.options.markNotEmpty && control.value !== '') {
-        //    return true;
-        //}
 
-        return false;
+        this.cdr.markForCheck();
     }
 }

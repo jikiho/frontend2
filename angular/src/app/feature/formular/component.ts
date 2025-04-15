@@ -28,8 +28,8 @@ export class FormularComponent {
     }));
 
     formular = new FormGroup({
-        stateGovInput: new FormControl<string | null>(null, Validators.required),
-        stateGovAutocomplete: new FormControl<string | null>(null, Validators.required),
+        stateGovInput: new FormControl(null, Validators.required),
+        stateGovAutocomplete: new FormControl(null, Validators.required),
         stateGovSelect: new FormControl(),
         stateSelect: new FormControl()
     });

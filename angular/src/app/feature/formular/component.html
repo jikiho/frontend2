@@ -69,9 +69,9 @@
         </gov-form-control>
 
         <gov-flex direction="row" gap="m">
-            <gov-button color="primary" type="solid" disabled>Odeslat</gov-button>
+            <gov-button color="primary" type="solid" disabled>Odeslat údaje</gov-button>
 
-            <gov-button color="neutral" type="base" (gov-click)="formular.reset(defaults)" [disabled]="!formular.dirty && !formular.touched">Obnovit formulář</gov-button>
+            <gov-button color="neutral" type="base" (gov-click)="formular.reset(defaults)" [disabled]="!formular.dirty && !formular.touched">Obnovit údaje</gov-button>
         </gov-flex>
 
         <form-control-status [control]="formular"></form-control-status>
