@@ -1,13 +1,14 @@
-import { Directive, HostBinding, Input, OnDestroy, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Directive, HostBinding, Input, OnDestroy, AfterViewInit, Optional } from '@angular/core';
 import { AbstractControl, FormControl, NgControl, PristineChangeEvent, StatusChangeEvent, TouchedChangeEvent } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { distinctUntilChanged as rxDistinctUntilChanged, map as rxMap } from 'rxjs';
 
-type ControlType = FormControl | NgControl | null;
+type ControlType = FormControl | NgControl;
 
 @Directive({
     selector: '[formControlInvalid], [formControlStatus]'
 })
-export class FormControlStatusDirective implements OnInit, OnDestroy {
+export class FormControlStatusDirective implements AfterViewInit, OnDestroy {
     @HostBinding('attr.invalid')
     invalid: true | null = null;
 
@@ -30,27 +31,26 @@ export class FormControlStatusDirective implements OnInit, OnDestroy {
         this.controlSuccess = !!this.control.getValue();
     }
 
-    private control = new BehaviorSubject<ControlType>(null);
+    private control = new BehaviorSubject<ControlType | null>(null);
 
     private initialized!: Subscription;
 
     private changes?: Subscription;
 
     constructor(
+        private cdr: ChangeDetectorRef,
         @Optional() private self: NgControl
     ) {
     }
 
-    ngOnInit() {
-        setTimeout(() => {
-            this.initialized = this.control.subscribe((control) => {
-                if (control instanceof NgControl) {
-                    this.initStatus(control.control as FormControl);
-                }
-                else {
-                    this.initStatus(control);
-                }
-            });
+    ngAfterViewInit() {
+        this.initialized = this.control.subscribe((control) => {
+            if (control instanceof NgControl) {
+                this.initStatus(control.control as FormControl);
+            }
+            else {
+                this.initStatus(control);
+            }
         });
     }
 
@@ -72,17 +72,21 @@ export class FormControlStatusDirective implements OnInit, OnDestroy {
         }
     }
 
-    private initStatus(control: ControlType) {
+    private initStatus(control: ControlType | null) {
         this.changes?.unsubscribe();
 
         this.updateStatus(control);
 
+        //TODO? první nastavení invalid se jinak neprojeví
+        this.cdr.markForCheck();
+
         if (control instanceof FormControl) {
-            this.changes = control.events.subscribe((event) => {
-                if (event instanceof PristineChangeEvent || event instanceof TouchedChangeEvent ||
-                        event instanceof StatusChangeEvent) {
-                    this.updateStatus(control);
-                }
+            this.changes = control.events.pipe(
+                rxMap(() => (control.dirty ? 1 : 0) + (control.touched ? 2 : 0) + (control.invalid ? 4 : 0)),
+                rxDistinctUntilChanged()
+            )
+            .subscribe(() => {
+                this.updateStatus(control);
             });
         }
         else if (control?.statusChanges) {
@@ -93,14 +97,35 @@ console.warn("Detect only status changes", control);
         }
     }
 
-    private updateStatus(control: ControlType) {
-        this.invalid = control?.invalid && (control.dirty || control.touched) || null;
+    private updateStatus(control: ControlType | null) {
+        if (!control) {
+            this.invalid = this.success = null;
+        }
+        else {
+            const markable = this.isMarkable(control);
 
-        if (this.controlSuccess) {
-            this.success = control?.value && control?.valid || null;
+            this.invalid = markable && control?.invalid || null;
+
+            if (this.controlSuccess) {
+                this.success = markable && control?.valid || null;
+            }
+            else if (this.success) {
+                this.success = null;
+            }
         }
-        else if (this.success) {
-            this.success = null;
+    }
+
+    private isMarkable(control: ControlType): boolean {
+        if (control.dirty || control.touched) {
+            return true;
         }
+        //else if (this.options.markNotNull && control.value !== null) {
+        //    return true;
+        //}
+        //else if (this.options.markNotEmpty && control.value !== '') {
+        //    return true;
+        //}
+
+        return false;
     }
 }
